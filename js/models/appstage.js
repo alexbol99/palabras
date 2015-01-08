@@ -33,6 +33,9 @@ define([],
                 canvas.width = parent.width();
                 canvas.height = parent.height();
                 stage.update();
+            },
+            triggerMatch: function() {
+                this.trigger("match");
             }
         });
         return new AppStage();

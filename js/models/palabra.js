@@ -3,15 +3,15 @@
  */
 define([],
     function () {
-        var Palabra = Backbone.Model.extend({
+        return Backbone.Model.extend({
             defaults: {
-                tag: "",
-                spanish: "",
-                russian: ""
+                id: "",
+                leftside: true,
+                text: "",
+                y: 0
             },
             initialize: function () {
 
             }
         });
-        return new Palabra();
     });

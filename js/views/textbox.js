@@ -7,17 +7,13 @@ define(['models/appstage'],
         var stage;
 
         return Backbone.View.extend({
-            //el: $("#main-container"),
-            //
-            //model: units,
-
             initialize: function () {
                 self = this;
                 stage = appStage.get("stage");
 
-                var text = this.model.text;
+                var text = this.model.get("text");
                 this.textElement = new createjs.Text(text, "25px Arial", "#ff7700");
-                this.textElement.id = this.model.id;    // augment element with id for matching
+                this.textElement.id = this.model.get("id");    // augment element with id for matching
 
                 this.render();
                 this.setHitArea();
@@ -29,9 +25,9 @@ define(['models/appstage'],
             },
 
             render: function () {
-                var x = this.model.leftside ? 0 : stage.canvas.width/2;
+                var x = this.model.get("leftside") ? 0 : stage.canvas.width/2;
                 this.textElement.x = x;
-                this.textElement.y = this.model.y;   // 0;
+                this.textElement.y = this.model.get("y");   // 0;
                 this.textElement.textBaseline = "top";
 
                 stage.addChild(this.textElement);
@@ -74,10 +70,11 @@ define(['models/appstage'],
                 if (otherTextElement) {
                     if (otherTextElement.id == myTextElement.id) {
                         otherTextElement.text = myTextElement.text + " - " + otherTextElement.text;   // "Hello World";
-                        myTextElement.text = "";
+                        myTextElement.parent.removeChild(myTextElement);
+                        // myTextElement.text = "";
 
                         createjs.Tween.get(otherTextElement, {loop: false})
-                            .to({alpha: 0, y: 0}, 1500, createjs.Ease.getPowInOut(2));
+                            .to({alpha: 0, y: -100}, 1500, createjs.Ease.getPowInOut(2));
                         /*
                          .to({x: 400}, 1000, createjs.Ease.getPowInOut(4))
                          .to({alpha: 0, y: 75}, 500, createjs.Ease.getPowInOut(2))
@@ -87,6 +84,8 @@ define(['models/appstage'],
                          */
                         createjs.Ticker.setFPS(60);
                         createjs.Ticker.addEventListener("tick", stage);
+
+                        appStage.triggerMatch();
                     }
                     else {
                         this.x = this.origX;

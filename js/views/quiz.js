@@ -1,24 +1,19 @@
 /**
  * Created by alexbol on 1/8/2015.
  */
-define(['models/appstage', 'collections/palabras', 'views/textbox'],
-    function (appStage, palabrasCollection, Textbox) {
+define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/textbox'],
+    function (appStage, Palabra, palabrasCollection, Textbox) {
         var self;
         var stage;
 
         return Backbone.View.extend({
-            //el: $("#main-container"),
-            //
-            //model: units,
 
             initialize: function () {
                 self = this;
                 stage = appStage.get("stage");
-
-                stage.clear();
-
+                this.maxNum = 8;
                 $("#select-custom-1").on("change", this.categoryChanged, this);
-                // this.refresh();
+                appStage.on("match", this.match, this);
             },
 
             categoryChanged: function() {
@@ -30,42 +25,72 @@ define(['models/appstage', 'collections/palabras', 'views/textbox'],
             start: function() {
                 var category = $("#select-custom-1").val();
                 this.palabrasCategory = palabrasCollection.where({category : category});
+                this.curNum = this.maxNum;
                 this.refresh();
             },
 
             refresh: function () {
-                var palabras = this.getRandom();
+                stage.clear();
+
+                this.palabras = this.getRandom();
+
+                this.curNum = this.palabras.length;
 
                 var y_position = 0;
-                palabras.forEach(function(palabra) {
-                    var spanish = new Textbox({ model:
-                    {
-                        id: palabra.cid,
-                        leftside: true,
-                        text: palabra.get("spanish"),
-                        y: y_position
-                    }
-                    });
+                this.palabras.forEach(function(palabra) {
+                    if (palabra) {
+                        var model = new Palabra(
+                            {
+                                id: palabra.cid,
+                                leftside: true,
+                                text: palabra.get("spanish"),
+                                y: y_position
+                            });
 
-                    var russian = new Textbox({ model:
-                    {
-                        id: palabra.cid,
-                        leftside: false,
-                        text: palabra.get("russian"),
-                        y: y_position
-                    }
-                    });
+                        model.on("match", this.match, this);
 
-                    y_position += 50;
+                        var spanish = new Textbox({ model: model });
+
+                        y_position += 50;
+                    }
+                }, this);
+
+                this.shuffle(this.palabras);
+
+                var y_position = 0;
+                this.palabras.forEach(function(palabra) {
+                    if (palabra) {
+                        var model = new Palabra(
+                            {
+                                id: palabra.cid,
+                                leftside: false,
+                                text: palabra.get("russian"),
+                                y: y_position
+                            });
+
+                        model.on("match", this.match, this);
+
+                        var russian = new Textbox({ model: model } );
+
+                        y_position += 50;
+                    }
                 });
 
                 appStage.get("stage").update();
             },
 
+            match: function() {
+                this.curNum--;
+                console.log(this.curNum);
+                if (this.curNum == 0) {
+                    this.refresh();
+                }
+            },
+
             getRandom: function() {
                 var palabras = [];
                 var inds = [];
-                var maxnum = 4;
+                var maxnum = this.maxNum;
                 var i;
 
                 if (this.palabrasCategory.length <= maxnum) {
@@ -76,7 +101,7 @@ define(['models/appstage', 'collections/palabras', 'views/textbox'],
                 }
 
                 while (inds.length < maxnum) {
-                    i = Math.floor((Math.random() * this.palabrasCategory.length) + 1);
+                    i = Math.floor((Math.random() * (this.palabrasCategory.length-1)) + 1);
                     if (inds.indexOf(i) == -1) {
                         inds.push(i);
                     }
@@ -86,6 +111,27 @@ define(['models/appstage', 'collections/palabras', 'views/textbox'],
                     palabras.push(this.palabrasCategory[i]);
                 }, this);
                 return palabras;
+            },
+
+            // http://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript
+            shuffle: function(array) {
+                var counter = array.length, temp, index;
+
+                // While there are elements in the array
+                while (counter > 0) {
+                    // Pick a random index
+                    index = Math.floor(Math.random() * counter);
+
+                    // Decrease counter by 1
+                    counter--;
+
+                    // And swap the last element with it
+                    temp = array[counter];
+                    array[counter] = array[index];
+                    array[index] = temp;
+                }
+
+                return array;
             }
         });
     });
