@@ -3,6 +3,7 @@
  */
 define([],
     function () {
+        var self;
         var AppStage = Backbone.Model.extend({
             defaults: {
 
@@ -15,14 +16,23 @@ define([],
                 stage.enableMouseOver(10);       // enabled mouse over / out events
                 stage.mouseMoveOutside = true;   // keep tracking the mouse even when it leaves the canvas
 
+                self = this;
+
                 this.resize();                   // resize canvas
+
+                window.addEventListener('orientationchange', function(event) {
+                    location.reload();
+                    // self.resize();
+                }, false);
             },
             resize: function() {
                 // Change canvas resolution on changing window size
-                var canvas = this.get("stage").canvas;
+                var stage = self.get("stage")
+                var canvas = stage.canvas;
                 var parent = $(canvas).parent();
                 canvas.width = parent.width();
                 canvas.height = parent.height();
+                stage.update();
             }
         });
         return new AppStage();

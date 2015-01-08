@@ -16,7 +16,7 @@ define(['models/appstage'],
                 stage = appStage.get("stage");
 
                 var text = this.model.text;
-                this.textElement = new createjs.Text(text, "50px Arial", "#ff7700");
+                this.textElement = new createjs.Text(text, "25px Arial", "#ff7700");
                 this.textElement.id = this.model.id;    // augment element with id for matching
 
                 this.render();
@@ -29,7 +29,7 @@ define(['models/appstage'],
             },
 
             render: function () {
-                var x = this.model.leftside ? 50 : 350;
+                var x = this.model.leftside ? 0 : stage.canvas.width/2;
                 this.textElement.x = x;
                 this.textElement.y = this.model.y;   // 0;
                 this.textElement.textBaseline = "top";
