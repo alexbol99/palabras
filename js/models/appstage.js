@@ -31,7 +31,7 @@ define([],
                 var canvas = stage.canvas;
                 var parent = $(canvas).parent();
                 canvas.width = parent.width();
-                canvas.height = parent.height();
+                canvas.height = parent.height() - 165;  // minus refresh button height
                 stage.update();
             },
             triggerMatch: function() {

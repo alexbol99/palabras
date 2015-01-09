@@ -13,21 +13,24 @@ define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/text
                 stage = appStage.get("stage");
                 this.maxNum = (window.orientation == undefined || window.orientation == 0) ? 8 : 4;
                 $("#select-custom-1").on("change", this.categoryChanged);
+                $("#refresh-button").on("click", this.refresh_cb);
                 appStage.on("match", this.match, this);
             },
 
             categoryChanged: function() {
                 var category = $("#select-custom-1").val();
                 self.palabrasCategory = palabrasCollection.where({category : category});
-                this.curNum = this.maxNum;
                 self.refresh();
             },
 
             start: function() {
                 var category = $("#select-custom-1").val();
                 this.palabrasCategory = palabrasCollection.where({category : category});
-                this.curNum = this.maxNum;
                 this.refresh();
+            },
+
+            refresh_cb: function() {
+                self.refresh();
             },
 
             refresh: function () {
