@@ -11,15 +11,16 @@ define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/text
             initialize: function () {
                 self = this;
                 stage = appStage.get("stage");
-                this.maxNum = 8;
-                $("#select-custom-1").on("change", this.categoryChanged, this);
+                this.maxNum = (window.orientation == undefined || window.orientation == 0) ? 8 : 4;
+                $("#select-custom-1").on("change", this.categoryChanged);
                 appStage.on("match", this.match, this);
             },
 
             categoryChanged: function() {
                 var category = $("#select-custom-1").val();
-                this.palabrasCategory = palabrasCollection.where({category : category});
-                this.refresh();
+                self.palabrasCategory = palabrasCollection.where({category : category});
+                this.curNum = this.maxNum;
+                self.refresh();
             },
 
             start: function() {
@@ -30,6 +31,7 @@ define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/text
             },
 
             refresh: function () {
+                stage.removeAllChildren ();
                 stage.clear();
 
                 this.palabras = this.getRandom();
@@ -76,7 +78,7 @@ define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/text
                     }
                 });
 
-                appStage.get("stage").update();
+                stage.update();
             },
 
             match: function() {
