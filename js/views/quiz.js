@@ -1,8 +1,8 @@
 /**
  * Created by alexbol on 1/8/2015.
  */
-define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/textbox'],
-    function (appStage, Palabra, palabrasCollection, Textbox) {
+define(['models/appstage', 'models/palabra', 'views/textbox'],
+    function (appStage, Palabra, Textbox) {
         var self;
         var stage;
 
@@ -12,21 +12,45 @@ define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/text
                 self = this;
                 stage = appStage.get("stage");
                 this.maxNum = (window.orientation == undefined || window.orientation == 0) ? 8 : 4;
-                $("#select-custom-1").on("change", this.categoryChanged);
+                $("#category").on("change", this.categoryChanged);
+                $("#language").on("change", this.refresh_cb);
                 $("#refresh-button").on("click", this.refresh_cb);
                 appStage.on("match", this.match, this);
             },
 
-            categoryChanged: function() {
-                var category = $("#select-custom-1").val();
-                self.palabrasCategory = palabrasCollection.where({category : category});
-                self.refresh();
+            retrieveFromParse: function(category) {
+                var PalabraParseObject = Parse.Object.extend("Palabra");
+                var PalabrasParseCollection = Parse.Collection.extend({
+                    model: PalabraParseObject,
+                    query: (new Parse.Query(PalabraParseObject)).equalTo("category", category)
+                });
+                var collection = new PalabrasParseCollection();
+                collection.fetch({
+                    success: function(collection) {
+                        self.palabrasCategory = collection;
+                        self.refresh();
+                    },
+                    error: function(collection, error) {
+                        // The collection could not be retrieved.
+                        console.warn(error.message);
+                    }
+                });
+
+                return collection;
+            },
+
+            categoryChanged: function(event) {
+                var category = $("#category").val();
+                // self.palabrasCategory = palabrasCollection.where({category : category});
+                self.retrieveFromParse(category);
+                // self.refresh();
             },
 
             start: function() {
-                var category = $("#select-custom-1").val();
-                this.palabrasCategory = palabrasCollection.where({category : category});
-                this.refresh();
+                var category = $("#category").val();
+                // this.palabrasCategory = palabrasCollection.where({category : category});
+                this.retrieveFromParse(category);
+                // this.refresh();
             },
 
             refresh_cb: function() {
@@ -42,6 +66,7 @@ define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/text
                 this.curNum = this.palabras.length;
 
                 var y_position = 0;
+
                 this.palabras.forEach(function(palabra) {
                     if (palabra) {
                         var model = new Palabra(
@@ -62,6 +87,9 @@ define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/text
 
                 this.shuffle(this.palabras);
 
+                var otherLanguage = $("#language").val();
+                var hebrew = otherLanguage == "hebrew" ? true : false
+
                 var y_position = 0;
                 this.palabras.forEach(function(palabra) {
                     if (palabra) {
@@ -69,13 +97,14 @@ define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/text
                             {
                                 id: palabra.cid,
                                 leftside: false,
-                                text: palabra.get("russian"),
-                                y: y_position
+                                text: palabra.get(otherLanguage),   /* get("russian"),*/
+                                y: y_position,
+                                hebrew: hebrew
                             });
 
                         model.on("match", this.match, this);
 
-                        var russian = new Textbox({ model: model } );
+                        var other = new Textbox({ model: model } );
 
                         y_position += 50;
                     }
@@ -86,7 +115,6 @@ define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/text
 
             match: function() {
                 this.curNum--;
-                console.log(this.curNum);
                 if (this.curNum == 0) {
                     this.refresh();
                 }
@@ -113,7 +141,8 @@ define(['models/appstage', 'models/palabra', 'collections/palabras', 'views/text
                 }
 
                 inds.forEach(function(i) {
-                    palabras.push(this.palabrasCategory[i]);
+                    // palabras.push(this.palabrasCategory[i]);
+                    palabras.push(this.palabrasCategory.at(i));
                 }, this);
                 return palabras;
             },

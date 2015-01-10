@@ -39,7 +39,7 @@ function () {
 
         { category: "La casa", spanish: "el sofa", russian: "софа"},
         { category: "La casa", spanish: "el sillon", russian: "кресло"},
-        { category: "La casa", spanish: "la lamapara", russian: "лампа"},
+        { category: "La casa", spanish: "la lampara", russian: "лампа"},
         { category: "La casa", spanish: "el cuadro", russian: "картина"},
         { category: "La casa", spanish: "el tapete", russian: "ковер"},
         { category: "La casa", spanish: "el alfombra", russian: "ковер"},
@@ -59,7 +59,7 @@ function () {
         { category: "La casa", spanish: "la nevera", russian: "холодильник"},
         { category: "La casa", spanish: "el frigorifico", russian: "холодильник"},
         { category: "La casa", spanish: "el horno", russian: "печь"},
-        //{ category: "La casa", spanish: "los hornillos", russian: ""},
+        { category: "La casa", spanish: "los hornillos", russian: "плита"},
         { category: "La casa", spanish: "el micro", russian: "микроволновка"},
         { category: "La casa", spanish: "el lavaplatos", russian: "посудомойка"},
         { category: "La casa", spanish: "la lavadora", russian: "стиральная машина"},

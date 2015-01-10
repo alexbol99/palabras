@@ -5,32 +5,31 @@
     <title>Palabras - learn spanish words</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="./css/jquery.mobile-1.4.5.css" rel="stylesheet" type="text/css"/>
+    <style>
+        .ui-btn-inline:nth-of-type(2) {
+            width: 70%;
+        }
+    </style>
 </head>
 <body>
     <div data-role="page">
-        <select name="select-custom-1" id="select-custom-1" data-native-menu="false">
-            <option value="La casa">La casa</option>
+        <select name="language" id="language"  data-inline="true" data-icon="gear" data-native-menu="false">
+            <option value="russian">RU</option>
+            <option value="hebrew">HE</option>
+        </select>
+        <select name="category" id="category"  data-inline="true" data-native-menu="false">
+            <option value="La casa" style="width:600px;">La casa</option>
             <option value="Adjectivos para descibir una vivenda">Adjectivos para descibir una vivenda</option>
             <option value="Posicion">Posicion</option>
             <option value="Interrogativos">Interrogativos</option>
             <option value="Verbos regulares">Verbos regulares</option>
             <option value="Verbos irregulares">Verbos irregulares</option>
         </select>
-        <!--<div data-role="header">-->
-            <!--<h1>Page Title</h1>-->
-            <!--<div class="ui-field-contain">-->
-            <!--</div>-->
-        <!--</div>&lt;!&ndash; /header &ndash;&gt;-->
 
         <div role="main" class="ui-content">
             <canvas id="canvas" width="950" height="500"></canvas>
             <a href="#" class="ui-btn ui-icon-refresh ui-btn-icon-bottom" id="refresh-button"></a>
         </div><!-- /content -->
-
-        <!--<div data-role="footer">-->
-            <!--<h4>Page Footer</h4>-->
-        <!--</div>-->
-        <!-- /footer -->
 
     </div>
 
@@ -38,6 +37,7 @@
     <script src="js/lib/tweenjs-0.6.0.min.js"></script>
     <script src="js/lib/jquery-2.1.3.min.js"></script>
     <script src="js/lib/jquery.mobile-1.4.5.min.js"></script>
+    <script src="js/lib/parse-1.3.3.min.js"></script>
     <script src="js/lib/underscore-min.js"></script>
     <script src="js/lib/backbone-min.js"></script>
     <script data-main="js/main" src="js/lib/require.js"></script>

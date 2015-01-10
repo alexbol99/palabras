@@ -25,10 +25,12 @@ define(['models/appstage'],
             },
 
             render: function () {
-                var x = this.model.get("leftside") ? 0 : stage.canvas.width/2;
+                var x = this.model.get("leftside") ? 0 :
+                    this.model.get("hebrew") ? stage.canvas.width : stage.canvas.width/2;
                 this.textElement.x = x;
                 this.textElement.y = this.model.get("y");   // 0;
                 this.textElement.textBaseline = "top";
+                this.textElement.textAlign = this.model.get("hebrew") ? "end" : "start";
 
                 stage.addChild(this.textElement);
             },
@@ -106,11 +108,11 @@ define(['models/appstage'],
 
             setHitArea: function () {
                 var hitArea = new createjs.Shape();
-                var textWidth = this.textElement.getMeasuredWidth();
-                var textHeight = this.textElement.getMeasuredHeight();
-                hitArea.graphics.beginFill("#000").drawRect(0, 0, this.textElement.getMeasuredWidth(), this.textElement.getMeasuredHeight());
-                hitArea.x = 0;
-                hitArea.y = 0;
+                var textWidth = Math.max(this.textElement.getMeasuredWidth(), 0.8*(stage.canvas.width/2)) ;
+                var textHeight = this.textElement.getMeasuredHeight()+10;
+                hitArea.graphics.beginFill("#ff7700").drawRect(0, 0, textWidth, textHeight);
+                hitArea.x = (this.textElement.textAlign  == "start" ? 0 : -textWidth);
+                hitArea.y = -5;
                 this.textElement.hitArea = hitArea;
             }
 
