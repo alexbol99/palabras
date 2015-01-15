@@ -21,7 +21,6 @@ define(['models/appstage'],
                 this.textElement.on("mousedown", this.dragstart);
                 this.textElement.on("pressmove", this.dragmove);
                 this.textElement.on("pressup", this.dragstop);
-
             },
 
             render: function () {
