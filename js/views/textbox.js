@@ -117,4 +117,3 @@ define(['models/appstage'],
 
         });
     });
-

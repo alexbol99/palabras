@@ -169,4 +169,3 @@ define(['models/appstage', 'models/palabra', 'views/textbox'],
             }
         });
     });
-
